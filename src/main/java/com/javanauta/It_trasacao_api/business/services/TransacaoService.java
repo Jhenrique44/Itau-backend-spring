@@ -34,7 +34,16 @@ public class TransacaoService {
         transacoes.add(dto);
     }
     public void deleteTransacao()  { 
-
+        log.info("Iniciando a exclusão de todas as transações");
+        transacoes.clear();
     }
 
+    public List<TransacaoRequestDTO> buscarTransacoes(Integer intervaloBusca) {
+        log.info("Buscando todas as transações nos ultimos {} segundos", intervaloBusca);
+        OffsetDateTime dataHoraIntervalo = OffsetDateTime.now().minusDays(intervaloBusca);
+        
+        return transacoes.stream()
+            .filter(transacao -> transacao.dataHora().isAfter(dataHoraIntervalo))
+            .toList();
+    }
 }
