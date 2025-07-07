@@ -21,7 +21,7 @@ public class TransacaoService {
 
     public void registrarTransacao( TransacaoRequestDTO dto)  {
         
-        log.info("Iniciando o registro da transação");
+        log.info("Iniciando o registro da transação" + dto);
 
         if (dto.dataHora().isAfter(OffsetDateTime.now())) {
             log.error("Data e hora da transação no futuro.");
@@ -30,18 +30,20 @@ public class TransacaoService {
             log.error("Valor menor que 0.");
             throw new UnprocessableEntity("O valor da transação não pode ser negativo.");
         }
-
         transacoes.add(dto);
+        log.info("Transação registrada com sucesso!" );
     }
     public void deleteTransacao()  { 
         log.info("Iniciando a exclusão de todas as transações");
         transacoes.clear();
+        log.info("Transações foram excluídas com sucesso!");
     }
 
     public List<TransacaoRequestDTO> buscarTransacoes(Integer intervaloBusca) {
-        log.info("Buscando todas as transações nos ultimos {} segundos", intervaloBusca);
+        log.info("Buscando todas as transações nos ultimos" + intervaloBusca + "segundos");
         OffsetDateTime dataHoraIntervalo = OffsetDateTime.now().minusDays(intervaloBusca);
         
+        log.info("Retorno de transações com sucesso!");
         return transacoes.stream()
             .filter(transacao -> transacao.dataHora().isAfter(dataHoraIntervalo))
             .toList();
