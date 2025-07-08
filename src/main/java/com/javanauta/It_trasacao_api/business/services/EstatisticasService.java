@@ -22,7 +22,9 @@ public class EstatisticasService {
         
         log.info("Iniciando o cálculo das estatísticas das transações pelo periodo de tempo" + intervaloBusca + " segundos");
         List<TransacaoRequestDTO> transacoes = transacaoService.buscarTransacoes(intervaloBusca);
-        
+
+        long start = System.currentTimeMillis();
+
         if(transacoes.isEmpty()){
             log.error("Nenhuma transação encontrada.");
             return new EstatisticasResponseDTO(0L,0.0,0.0,0.0,0.0);
@@ -31,6 +33,10 @@ public class EstatisticasService {
         DoubleSummaryStatistics estatisticasTransacoes = transacoes.stream()
             .mapToDouble(TransacaoRequestDTO::valor)
             .summaryStatistics(); 
+        
+        long finish = System.currentTimeMillis();
+        System.out.println("Tempo gasto para calcular as estatísticas: " + (finish - start) + "ms");
+        
         log.info("Estatísticas calculadas!");
         return new EstatisticasResponseDTO(estatisticasTransacoes.getCount(),
                                            estatisticasTransacoes.getSum(),
